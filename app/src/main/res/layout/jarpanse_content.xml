@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:src="@mipmap/zuijin_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.orangepeople.movies.orangepeopletv.View.SelfGridView
+        android:id="@+id/zuijinupdate_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3">
+
+    </com.orangepeople.movies.orangepeopletv.View.SelfGridView>
+
+
+</LinearLayout>

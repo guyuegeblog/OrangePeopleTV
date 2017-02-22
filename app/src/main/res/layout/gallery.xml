@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
+            style="@style/fontstyle"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="-7dp"
+            app:delay_time="3000"
+            app:image_scale_type="fit_xy"
+            app:indicator_drawable_selected="@drawable/selected_radius"
+            app:indicator_drawable_unselected="@drawable/unselected_radius"
+            app:indicator_height="8dp"
+            app:indicator_margin="5dp"
+            app:indicator_width="8dp"
+            app:title_background="@null"
+            app:title_height="30dp"
+            app:title_textcolor="@color/white"
+            app:title_textsize="18sp" />
+
+
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/look_at" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

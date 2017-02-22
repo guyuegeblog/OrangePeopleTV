@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        orangepeopletvone {
+            keyAlias 'orangepeopletvone'
+            keyPassword '123456'
+            storeFile file('C:/WangXuDongQM/orangepeopletvone.jks')
+            storePassword '123456'
+        }
+    }
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+    defaultConfig {
+        applicationId "com.orangepeople.movies.orangepeopletv.one"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "4.0"
+    }
+
+    productFlavors {
+//        wypp50011 {}
+//        wypp50012 {}
+//        wypp50013 {}
+//        wypp50014 {}
+//        wypp50015 {}
+//        wypp50016 {}
+//        wypp50017 {}
+//        wypp50021 {}
+//        wypp0000
+//        sendtv10001 {}
+
+//        send50001 {}
+//        send50002 {}
+//        send50003 {}
+//        send50004 {}
+//        vpntest0000{}
+//        send50005 {}
+//        send50010 {}
+//        send50011 {}
+//        send50009 {}
+        send8001 {}
+        send8002 {}
+        send8003 {}
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.orangepeopletvone
+            minifyEnabled false
+        }
+        release {
+            signingConfig signingConfigs.orangepeopletvone
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.github.ybq:Android-SpinKit:1.0.1'
+    compile 'org.xutils:xutils:3.3.36'
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'org.apache.httpcomponents:httpcore:4.4.4'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.alibaba:fastjson:1.2.14'
+    compile 'com.youth.banner:banner:+'
+    //最新版本
+    compile project(':superplayerlibrary')
+    compile 'com.supercwn.superrecycleview:superlibrary:1.2.0'
+//    compile 'com.liulishuo.filedownloader:library:0.1.2'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okio:okio:1.7.0'
+}
