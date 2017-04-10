@@ -16,7 +16,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
-        versionName "4.0"
+        versionName "4.51"
     }
 
     productFlavors {
@@ -39,10 +39,13 @@ android {
 //        send50005 {}
 //        send50010 {}
 //        send50011 {}
-//        send50009 {}
-        send8001 {}
-        send8002 {}
-        send8003 {}
+        send50009 {}
+//        send8001 {}
+//        send8002 {}
+//        send8003 {}
+        send60005 {}
+        crzb20015 {}
+//        send70000 {}
     }
 
     productFlavors.all {

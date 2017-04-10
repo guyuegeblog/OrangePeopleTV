@@ -11,6 +11,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -591,6 +594,7 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
                 double currentVersion = Double.parseDouble(util.getVersion(this));
                 if (newVersion > currentVersion) {
                     apkUpdateUrl = downUpdate.getUrl();
+                    newPackange(downUpdate.getPackName(), downUpdate.getVersion());
                     alert_Dilaog_DownLoad();
                 }
             }
@@ -598,18 +602,107 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
         }
     }
 
+    /***
+     * 判断是否新包名app
+     */
+    private AlertDialog.Builder dialog_Tv;
+
+    private void newPackange(final String packageName, String version) {
+        double newVersion = Double.parseDouble(version);
+        double currentVersion = Double.parseDouble(util.getVersion(this));
+        String currentPckageName = this.getPackageName();
+        if (newVersion > currentVersion) {
+            if (!packageName.equals(currentPckageName)) {
+                if (util.appIsExist(this, packageName)) {
+                    if (dialog_Tv == null) {
+                        dialog_Tv = new AlertDialog.Builder(this);
+                        dialog_Tv.setCancelable(false);
+                        dialog_Tv.setTitle("使用提示");
+                        dialog_Tv.setIcon(android.R.drawable.ic_dialog_info);
+                        dialog_Tv.setMessage("橙人直播当前旧版本已不能使用,请打开新版本TV");
+                        dialog_Tv.setPositiveButton("打开新版本", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                openNewVpn(packageName, LiveActivity.this);
+                            }
+                        }).setNegativeButton("卸载旧版本", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    unstallApp(LiveActivity.this.getPackageName());
+                                } catch (Exception e) {
+                                    openNewVpn(packageName, LiveActivity.this);
+                                }
+                            }
+                        }).show();
+                    } else {
+                        dialog_Tv.show();
+                    }
+                }
+            }
+        }
+    }
+
+    public void unstallApp(String packageName) {
+        Intent uninstall_intent = new Intent();
+        uninstall_intent.setAction(Intent.ACTION_DELETE);
+        uninstall_intent.setData(Uri.parse("package:" + packageName));
+        startActivity(uninstall_intent);
+    }
+
+
+    public void openNewVpn(String packageName, Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo pi = null;
+        try {
+            pi = packageManager.getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
+        }
+        Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
+        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        resolveIntent.setPackage(pi.packageName);
+        List<ResolveInfo> apps = packageManager.queryIntentActivities(resolveIntent, 0);
+        ResolveInfo ri = apps.iterator().next();
+        if (ri != null) {
+            String className = ri.activityInfo.name;
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            ComponentName cn = new ComponentName(packageName, className);
+            intent.setComponent(cn);
+            context.startActivity(intent);
+        }
+    }
+
 
     private AlertDialog.Builder dialog_DownLoad;
+    private AlertDialog alertDialog_DownLoad;
 
     public void alert_Dilaog_DownLoad() {
         MobclickAgent.onEvent(LiveActivity.this, MobClick.DOWNLOAD_UPDATE_TAN);//埋点统计
+        if (downUpdateApk != null) {
+            double newVersion = Double.parseDouble(downUpdateApk.getPropJson().get(0).getVersion());
+            double currentVersion = Double.parseDouble(util.getVersion(this));
+            String currentPckageName = this.getPackageName();
+            String newPackageName = downUpdateApk.getPropJson().get(0).getPackName();
+            if (newVersion > currentVersion) {
+                if (!newPackageName.equals(currentPckageName)) {
+                    if (util.appIsExist(this, newPackageName)) {
+                        if (alertDialog_DownLoad != null) {
+                            alertDialog_DownLoad.dismiss();
+                        }
+                        return;
+                    }
+                }
+            }
+        }
         if (dialog_DownLoad == null) {
             dialog_DownLoad = new AlertDialog.Builder(this);
             dialog_DownLoad.setCancelable(false);
             dialog_DownLoad.setTitle("升级提示");
             dialog_DownLoad.setIcon(android.R.drawable.ic_dialog_info);
             dialog_DownLoad.setMessage("橙人TV有最新的版本,尽快下载吧。");
-            dialog_DownLoad.setPositiveButton("马上下载", new DialogInterface.OnClickListener() {
+            alertDialog_DownLoad = dialog_DownLoad.setPositiveButton("马上下载", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -710,7 +803,7 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
         try {
             ApkJson apkJson = JSON.parseObject(decodeAesJson, ApkJson.class);
             if (apkJson.getApkJson().size() != 0) apkInfo = apkJson.getApkJson().get(0);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         try {
             if (apkInfo == null) {
@@ -773,21 +866,22 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
     private AlertDialog.Builder dialog_Max;
 
     public void alert_Dilaog_Max() {
-        if (!util.appIsExist(context, Constant.vpnVipPackageName)) {
-            MobclickAgent.onEvent(LiveActivity.this, MobClick.DOWNLOAD_VPN_TAN);//埋点统计
-            if (dialog_Max == null) {
-                dialog_Max = new AlertDialog.Builder(this);
-                dialog_Max.setCancelable(false);
-                dialog_Max.setTitle("消息提示");
-                dialog_Max.setIcon(android.R.drawable.ic_dialog_info);
-                dialog_Max.setMessage("恭喜您获得VPN免费使用大礼包");
-                dialog_Max.setPositiveButton("开始下载", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        apkDownLoad();
-                    }
-                }).show();
+        if (apkInfo != null) {
+            if (!util.appIsExist(context, apkInfo.getPackName())) {
+                MobclickAgent.onEvent(LiveActivity.this, MobClick.DOWNLOAD_VPN_TAN);//埋点统计
+                if (dialog_Max == null) {
+                    dialog_Max = new AlertDialog.Builder(this);
+                    dialog_Max.setCancelable(false);
+                    dialog_Max.setTitle("消息提示");
+                    dialog_Max.setIcon(android.R.drawable.ic_dialog_info);
+                    dialog_Max.setMessage("恭喜您获得VPN免费使用大礼包");
+                    dialog_Max.setPositiveButton("开始下载", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            apkDownLoad();
+                        }
+                    }).show();
 
 //            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
 //                @Override
@@ -795,8 +889,9 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
 //                    dialog.dismiss();
 //                }
 //            })
-            } else {
-                dialog_Max.show();
+                } else {
+                    dialog_Max.show();
+                }
             }
         }
 
@@ -899,6 +994,10 @@ public class LiveActivity extends AppCompatActivity implements AlertInterface {
      */
     public void onResume() {
         super.onResume();
+        if (downUpdateApk != null) {
+            DownUpdate downUpdate = downUpdateApk.getPropJson().get(0);
+            newPackange(downUpdate.getPackName(), downUpdate.getVersion());
+        }
         getApkUpdate();
         getUpdateData();
         MobclickAgent.onPageStart("直播首页面"); //统计页面(仅有Activity的应用中SDK自动调用，不需要单独写。"SplashScreen"为页面名称，可自定义)

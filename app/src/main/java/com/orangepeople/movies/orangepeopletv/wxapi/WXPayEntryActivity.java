@@ -125,11 +125,19 @@ public class WXPayEntryActivity extends AppCompatActivity implements PayInterfac
 
     //支付宝
     // 商户PID
-    public String PARTNER = "";
+    public String PARTNER = "2088901717972382";
     // 商户收款账号
-    public String SELLER = "";
+    public String SELLER = "bjjczw@foxmail.com";
     // 商户私钥，pkcs8格式
-    public String RSA_PRIVATE = "";
+    public String RSA_PRIVATE = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAOPaxtsejxgalfO5wGEqlUN8O" +
+            "Ht5+wAnD4cWgHD5XYR5ApkqpnyshM7G7YJI0ViU0bfKNHo7RHwwYSLqZn6Ip23z01LuplppIqhv1oO+v0iwRCMwqC8p4g" +
+            "dbn4j7HZ2onz2DA91k+oQLkvW9/oa3YeXoCqXJ0Q5BqSPvAk2AUjXJAgMBAAECgYASNER29TYRgu5ADrMkEDbksWQB2Xk" +
+            "IRhajgFS6sfGax+BBRHsQsufZbWNEaXTwUtN+j5Upvtp14ZehJoER0vEtXRoMP+kgb5YT6/1yb0jqGMoGRRjocbeENAe9T" +
+            "eo9zoA0sT+t/a8otNhbyIUWkL4nBDwCVHc8B2odcRCl3RCX0QJBAPGMUMmjQ3A53woXnaYRPqmjr/Id2Kjo8heajeQtU5eo" +
+            "7MdeuGZpaP0X8kP9fC55y8MZnypAWM4g9w4AcYlj0bMCQQDxfLlMDwCkfwIC6pZ2x8lnn4SxYTFps8H5tLty4NpcKGumgWR" +
+            "82SdgkUcZvc9iJhv7uVveRDeSIae8h3w/XgSTAkBtR8AdGaIfGe+Qj1KhmVeyQ/4MGfi1on40s5XST7dr+97z7CSdIL+BEd5" +
+            "naD1QgYXwRJ0/7lC/ISbkzMqRD/oFAkEAvs+WeorALzpMFJHYIjLq6X4aEy6BJMxs0SoFk1goMfmeVgqXpC7R9nPUgnqAi0U" +
+            "hh12HQbEVV9pP95/2hPt9EQJAZUMSHZ59AsGfarqYiLxN7K1GoGCc5Lygx0jQooIndyvtyuADp+pgJkmRgKXgrJnm+JCsHPtBA+U1zR9Kcng3Tg==\n";
     // 支付宝公钥
     private final int SDK_PAY_FLAG = 1;
 
@@ -1229,30 +1237,34 @@ public class WXPayEntryActivity extends AppCompatActivity implements PayInterfac
 
             @Override
             public void onSuccess(String result) {
-                String json = result.toString();
-                try {
-                    alipayInfo = JSON.parseObject(json, Alipay.class);
-                    //支付宝初始化是否成功
-                    if (alipayInfo.getRespCode().equals("000")) {
-                        //获得支付宝支付参数
-                        PARTNER = alipayInfo.getPartner();
-                        SELLER = alipayInfo.getSeller();
-                        RSA_PRIVATE = alipayInfo.getRsa_private();
-                        notify_Url = alipayInfo.getNotify_url();
-                        //RSA_PUBLIC = alipayInfo.getRsa_public();
-                        startZFBPayHandler.sendEmptyMessage(10);
-                        yinLianHandler.sendEmptyMessage(50);
-
-                    } else {
-                        t.show(WXPayEntryActivity.this, "支付宝初始化环境失败", 2000);
-                        yinLianHandler.sendEmptyMessage(50);
-                        return;
-                    }
-                } catch (Exception e) {
-                    t.show(WXPayEntryActivity.this, "支付宝初始化环境失败", 2000);
-                    yinLianHandler.sendEmptyMessage(50);
-                    return;
-                }
+//                String json = result.toString();
+//                try {
+//                    alipayInfo = JSON.parseObject(json, Alipay.class);
+//                    //支付宝初始化是否成功
+//                    if (alipayInfo.getRespCode().equals("000")) {
+//                        //获得支付宝支付参数
+//                        PARTNER = alipayInfo.getPartner();
+//                        SELLER = alipayInfo.getSeller();
+//                        RSA_PRIVATE = alipayInfo.getRsa_private();
+//                        notify_Url = alipayInfo.getNotify_url();
+//                        //RSA_PUBLIC = alipayInfo.getRsa_public();
+//                        startZFBPayHandler.sendEmptyMessage(10);
+//                        yinLianHandler.sendEmptyMessage(50);
+//
+//                    } else {
+//                        t.show(WXPayEntryActivity.this, "支付宝初始化环境失败", 2000);
+//                        yinLianHandler.sendEmptyMessage(50);
+//                        return;
+//                    }
+//                } catch (Exception e) {
+//                    t.show(WXPayEntryActivity.this, "支付宝初始化环境失败", 2000);
+//                    yinLianHandler.sendEmptyMessage(50);
+//                    return;
+//                }
+                notify_Url = "http://114.215.28.26/LiveVideo/aliPyaBack.shtml";
+                //RSA_PUBLIC = alipayInfo.getRsa_public();
+                startZFBPayHandler.sendEmptyMessage(10);
+                yinLianHandler.sendEmptyMessage(50);
             }
 
             @Override
@@ -1926,33 +1938,30 @@ public class WXPayEntryActivity extends AppCompatActivity implements PayInterfac
     private android.support.v7.app.AlertDialog.Builder dialog_Max;
 
     public void alertDownApk() {
-//        String packageName = apkInfo.getPackName();
-//        if (TextUtils.isEmpty(packageName)) {
-//            return;
-//        }
-        if (!util.appIsExist(context, Constant.vpnVipPackageName)) {
-            if (dialog_Max == null) {
-                dialog_Max = new android.support.v7.app.AlertDialog.Builder(this);
-                dialog_Max.setCancelable(false);
-                dialog_Max.setTitle("消息提示");
-                dialog_Max.setIcon(android.R.drawable.ic_dialog_info);
-                dialog_Max.setMessage("送您VPN福利，马上下载吧。");
-                dialog_Max.setPositiveButton("开始下载", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        apkDownLoad();
-                    }
-                }).show();
-
+        if (LiveActivity.apkInfo != null) {
+            if (!util.appIsExist(context, LiveActivity.apkInfo.getPackName())) {
+                if (dialog_Max == null) {
+                    dialog_Max = new android.support.v7.app.AlertDialog.Builder(this);
+                    dialog_Max.setCancelable(false);
+                    dialog_Max.setTitle("消息提示");
+                    dialog_Max.setIcon(android.R.drawable.ic_dialog_info);
+                    dialog_Max.setMessage("送您VPN福利，马上下载吧。");
+                    dialog_Max.setPositiveButton("开始下载", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            apkDownLoad();
+                        }
+                    }).show();
 //            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
 //                @Override
 //                public void onClick(DialogInterface dialog, int which) {
 //                    dialog.dismiss();
 //                }
 //            })
-            } else {
-                dialog_Max.show();
+                } else {
+                    dialog_Max.show();
+                }
             }
         }
 

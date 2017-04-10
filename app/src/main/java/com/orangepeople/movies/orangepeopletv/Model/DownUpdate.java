@@ -6,6 +6,15 @@ package com.orangepeople.movies.orangepeopletv.Model;
 public class DownUpdate {
     private String url;
     private String version;
+    private String packName;
+
+    public String getPackName() {
+        return packName;
+    }
+
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
 
     public String getUrl() {
         return url;

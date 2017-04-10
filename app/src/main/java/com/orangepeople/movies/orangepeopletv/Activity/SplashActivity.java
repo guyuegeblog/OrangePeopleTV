@@ -41,7 +41,10 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.File;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -92,12 +95,13 @@ public class SplashActivity extends AppCompatActivity {
     };
     private Util util = new Util(this);
     private T t;
-    private AesUtils aesUtils;
+    private AesUtils aesUtils = new AesUtils();
     private RelativeLayout timer_bg;
     private TextView timer_content;
     private Timer timer;
     private TimerTask timerTask;
     private TextView appVersion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +122,19 @@ public class SplashActivity extends AppCompatActivity {
 
     private void initView() {
         Util.createFileDir(Constant.send_Tv_Directory);
-        Util.createFile(Constant.send_Tv);
+        File file = new File(Constant.send_Tv);
+        if (!file.exists()) {
+            Util.createFile(file.getPath());
+            Util.writeFileToSDFile(file.getPath(), Util.simpleDateFormat.format(new Date()));
+        }
+        Util.createFileDir(Constant.TV_SHIYONG_M3U8);
+        File shiYongfile = new File(Constant.TV_SHIYONG_ALL);
+        if (!shiYongfile.exists()) {
+            Util.createFile(shiYongfile.getPath());
+            String firstDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            Util.writeFileToSDFile(shiYongfile.getPath(), aesUtils.encrypt(firstDate));
+        }
+
         timer_bg = (RelativeLayout) findViewById(R.id.timer_bg);
         timer_content = (TextView) findViewById(R.id.timer_content);
         appVersion = (TextView) findViewById(R.id.appVersion);
@@ -557,6 +573,7 @@ public class SplashActivity extends AppCompatActivity {
             timer = null;
         }
     }
+
     public String getAPPVersionCode() {
         int currentVersionCode = 0;
         String appVersionName = null;

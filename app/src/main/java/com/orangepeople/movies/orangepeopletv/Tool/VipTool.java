@@ -25,7 +25,7 @@ public class VipTool {
 //               time[3] = second;
                 isThanSendTvTime = times[0] >= SendTvTimeTool.Time_Day ? true : false;
             } catch (ParseException e) {
-                e.printStackTrace();
+                isThanSendTvTime = true;
             }
         } else if (SendTvTimeTool.SEND_TV_TIME_TYPE == SendTvTimeTool.SEND_TV_TIME_HOURS_TYPE) {
             //判断小时数
@@ -38,7 +38,7 @@ public class VipTool {
 //               time[3] = second;
                 isThanSendTvTime = times[1] >= SendTvTimeTool.Time_Hours ? true : false;
             } catch (ParseException e) {
-                e.printStackTrace();
+                isThanSendTvTime = true;
             }
         }
         return isThanSendTvTime;

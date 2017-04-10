@@ -526,7 +526,11 @@ public class Util {
             outputStream.write(bytes);
             outputStream.close();//关闭写人流
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -542,8 +546,11 @@ public class Util {
             res = EncodingUtils.getString(bytes, "UTF-8");
             inputStream.close();//关闭输入流
         } catch (FileNotFoundException e) {
-
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return res;

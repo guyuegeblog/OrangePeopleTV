@@ -171,7 +171,7 @@ public class UserUpdateActivity extends AppCompatActivity {
                     if (VipTool.judgeIsThanSendTvTime()) {
                         String oldDate = aesUtils.decrypt(Util.readFileToSDFile(Constant.TV_SHIYONG_M3U8_ALL));
                         try {
-                            if (Integer.parseInt(oldDate) > Constant.doDate) {
+                            if (Integer.parseInt(oldDate) >= Constant.doDate) {
                                 et_info_lasttime.setText("您的试用期已过期");
                             } else {
                                 if (Integer.parseInt(oldDate) == 0) {

@@ -301,7 +301,7 @@ public class SuperVideoDetailsActivity extends AppCompatActivity implements View
                 //第一次写入(给1个小时)
                 if (player != null) {
                     player.isStartTime = true;
-                    player.timeSecond = 3600;
+                    player.timeSecond = Constant.doDate;
                 }
                 Util.writeFileToSDFile(Constant.TV_SHIYONG_M3U8_ALL, aesUtils.encrypt("1"));
             } else {
@@ -333,7 +333,7 @@ public class SuperVideoDetailsActivity extends AppCompatActivity implements View
                 //第一次写入(给1个小时)
                 if (player != null) {
                     player.isStartTime = true;
-                    player.timeSecond = 3600;
+                    player.timeSecond = Constant.doDate;
                 }
                 Util.writeFileToSDFile(Constant.TV_SHIYONG_MP4_ALL, aesUtils.encrypt("1"));
             } else {
@@ -655,7 +655,7 @@ public class SuperVideoDetailsActivity extends AppCompatActivity implements View
                     //没有控制试用vpn的文件(試用)
                     Util.createFile(Constant.TV_SHIYONG_M3U8_ALL);
                     player.isStartTime = true;
-                    player.timeSecond = 3600;
+                    player.timeSecond = Constant.doDate;
                     //继续执行
                 } else {
                     //有文件
@@ -711,7 +711,7 @@ public class SuperVideoDetailsActivity extends AppCompatActivity implements View
                     //mp4(試用)
                     Util.createFile(Constant.TV_SHIYONG_MP4_ALL);
                     player.isStartTime = true;
-                    player.timeSecond = 3600;
+                    player.timeSecond = Constant.doDate;
                     //继续执行
                 } else {
                     //有文件
